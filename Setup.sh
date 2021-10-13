@@ -25,7 +25,7 @@ read -p " [Disk Utility] Would you like to wipe a disk.(y/N) " wipe
 
 function diskWipe() {
     echo
-    echo lsblk | grep "sd"
+    lsblk | grep "sd"
     echo
     read -p " [Disk Utility] Which disk would you like to wipe.(ex: sda, sdb) " disk
     if [ $(dd if=/dev/zero of=/dev/$disk bs=16M status=progress && sync) ]; then
