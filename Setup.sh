@@ -33,7 +33,7 @@ function diskWipe() {
     echo
     read -p " [Disk Utility] Which disk would you like to wipe.(ex: sda, sdb) " disk
     echo
-    if [ $(dd if=/dev/zero of=/dev/$disk bs=16M status=progress && sync) ]; then
+    if [ ! $(dd if=/dev/zero of=/dev/$disk bs=16M status=progress && sync) ]; then
         cfdisk /dev/$disk
         echo " [Disk Utility] Disk: $disk has been wiped and formatted!"
     else
