@@ -28,6 +28,7 @@ function diskWipe() {
     lsblk | grep "sd"
     echo
     read -p " [Disk Utility] Which disk would you like to wipe.(ex: sda, sdb) " disk
+    echo
     if [ $(dd if=/dev/zero of=/dev/$disk bs=16M status=progress && sync) ]; then
         echo " [Disk Utility] Disk: $disk has been wiped!"
     else
