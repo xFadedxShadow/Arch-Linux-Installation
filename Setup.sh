@@ -21,9 +21,12 @@ if [ "$password" != "$password_confirm" ]; then
     exit 1
 fi
 
-read -p " [Disk Utility] Would you like to wipe a disk.(y/N) " wipe
-
 function diskWipe() {
+    read -p " [Disk Utility] Would you like to wipe a disk.(y/N) " wipe
+
+    if [ "$wipe" == "n" ] || [ "$wipe" == "N" ]; then
+        return
+
     echo
     lsblk | grep "sd"
     echo
@@ -37,6 +40,4 @@ function diskWipe() {
     fi
 }
 
-if [ "$wipe" == "y" ] || [ "$wipe" == "Y" ]; then
-    diskWipe
-fi
+diskWipe
