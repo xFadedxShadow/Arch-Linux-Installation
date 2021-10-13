@@ -26,6 +26,7 @@ function diskWipe() {
 
     if [ "$wipe" == "n" ] || [ "$wipe" == "N" ]; then
         return
+    fi
 
     echo
     lsblk | grep "sd"
