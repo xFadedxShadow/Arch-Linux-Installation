@@ -21,10 +21,33 @@ if [ "$password" != "$password_confirm" ]; then
     exit 1
 fi
 
-function diskWipe() {
-    read -p " [Disk Utility] Would you like to wipe a disk.(y/N) " wipe
+function diskFormat() {
+    read -p " [Disk Utility] Would you like to format a partition.(y/N) " choice
 
-    if [ "$wipe" == "n" ] || [ "$wipe" == "N" ]; then
+    if [ "$choice" == "n" ] || [ "$choice" == "N" ]; then
+        return
+    fi
+
+    echo
+    lsblk | grep "sd"
+    echo
+    read -p " [Disk Utility] Which partition would you like to format.(ex: sda1, sdb1) " partition
+    read -p " [Disk Utility] Which filesystem type would you like to use.(ex: ext4, f32) " filesystem
+    echo
+
+    if [ "$filesystem" == "ext4" ]; then
+        mkfs.ext4 /dev/$partition
+    else if [ "$filesystem" == "f32" ]; then
+        mkfs.fat -F32 /dev/$partition
+    else
+        mkfs.$filesystem /dev/$partition
+    
+}
+
+function diskWipe() {
+    read -p " [Disk Utility] Would you like to wipe a disk.(y/N) " choice
+
+    if [ "$choice" == "n" ] || [ "$choice" == "N" ]; then
         return
     fi
 
@@ -35,7 +58,8 @@ function diskWipe() {
     echo
     if [ ! $(dd if=/dev/zero of=/dev/$disk bs=16M status=progress && sync) ]; then
         cfdisk /dev/$disk
-        echo " [Disk Utility] Disk: $disk has been wiped and formatted!"
+        echo " [Disk Utility] Disk: $disk has been wiped and partitioned!"
+        diskFormat
     else
         echo " [Disk Utility Error] Disk: $disk either does not exsist or couldn't be wiped!"
         diskWipe
